@@ -6,6 +6,7 @@ const editor = {
       background: "#fff",
       elements: [],
     },
+    activeComponentId: null,
     components: [
       {
         id: "1",
@@ -14,6 +15,9 @@ const editor = {
           text: "hello world",
           fontSize: "24px",
           top: "20px", // 👈 往下挪一点
+          lineHeight: "1.5",
+          textAlign: "center",
+          fontFamily: "",
         },
       },
       {
@@ -24,6 +28,8 @@ const editor = {
           fontSize: "14px",
           color: "red",
           top: "60px", // 👈 再往下挪一点
+          textAlign: "center",
+          fontFamily: "",
         },
       },
       {
@@ -38,10 +44,14 @@ const editor = {
           url: "https://www.baidu.com",
         },
       },
-    ]
+    ],
   }),
   getters: {
-    wx: (state) => (x) => state.poster.width * x,
+    getActiveComponent(state) {
+      return state.components.find(
+        (item) => item.id === state.activeComponentId,
+      );
+    },
   },
 };
 

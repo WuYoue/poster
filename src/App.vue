@@ -13,6 +13,9 @@ export default defineComponent({
   components: {
     Edit,
   },
+  setup() {
+    return {};
+  },
 });
 </script>
 
