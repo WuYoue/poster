@@ -3,6 +3,19 @@ import { defineComponent, computed } from "vue";
 import propsMap from "@/propsMap";
 import { reduce } from "lodash-es";
 
+// TODO: RenderVNode有什么用?这是一个组件吗?
+const RenderVNode = defineComponent({
+  props: {
+    VNode: {
+      type: [Object, String],
+      required: true,
+    },
+  },
+  render() {
+    return this.VNode;
+  },
+});
+
 export default defineComponent({
   name: "propsTable",
   props: {
@@ -12,6 +25,9 @@ export default defineComponent({
     },
   },
   emits: ["change"],
+  components: {
+    RenderVNode,
+  },
   setup(props, { emit }) {
     console.log(props.componentProps);
     console.log(propsMap);
@@ -73,9 +89,14 @@ export default defineComponent({
             v-bind="item.extraProps"
             v-on="item.events"
           >
-            <template v-for="value in item.options">
-              <component :is="item.subComponent" :value="value.value">
-                {{ value.label }}
+            <template v-for="(value, index) in item.options" :key="index">
+              <component
+                :is="item.subComponent"
+                :value="value.value"
+                :label="value.label"
+              >
+                <!-- TODO: 为什么RenderVNode 可以渲染标签 -->
+                <RenderVNode :VNode="value.label" />
               </component>
             </template>
           </component>

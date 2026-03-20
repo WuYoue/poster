@@ -1,11 +1,10 @@
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent } from "vue";
 import {
   textStylePropNames,
   transformToComponentProps,
   textDefaultProps,
 } from "@/defaultProps";
-import { pick } from "lodash-es";
 import useComponentCommon from "@/hooks/useComponentCommon";
 
 const defaultProps = transformToComponentProps(textDefaultProps);
