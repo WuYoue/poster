@@ -11,6 +11,9 @@ const editor = {
       {
         id: "1",
         name: "LText",
+        layerName: "图层1",
+        isHidden: false,
+        isLocked: false,
         props: {
           text: "hello world",
           fontSize: "24px",
@@ -34,6 +37,9 @@ const editor = {
       {
         id: "2",
         name: "LText",
+        layerName: "图层2",
+        isHidden: false,
+        isLocked: false,
         props: {
           text: "星斗堂艺术品",
           fontSize: "14px",
@@ -46,6 +52,9 @@ const editor = {
       {
         id: "3",
         name: "LText",
+        layerName: "图层3",
+        isHidden: false,
+        isLocked: false,
         props: {
           text: "中国风",
           fontSize: "18px",

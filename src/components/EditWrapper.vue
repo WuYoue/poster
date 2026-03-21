@@ -29,6 +29,9 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.edit-wrapper :deep(*) {
+  pointer-events: none !important;
+}
 .edit-wrapper {
   padding: 0px;
   cursor: pointer;

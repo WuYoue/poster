@@ -1,9 +1,12 @@
 <template>
   <div class="edit">
     <a-layout class="layout">
-      <a-layout-header class="header">海报生成编辑器</a-layout-header>
+      <a-layout-header class="header">
+        <img src="@/assets/WyLogo.svg" alt="无忧" />
+        海报生成编辑器
+      </a-layout-header>
       <a-layout class="content">
-        <a-layout-sider class="sider">
+        <a-layout-sider width="260px" class="sider">
           <p>组件列表</p>
           <ComponentList :list="templates" @selectComponent="selectComponent" />
         </a-layout-sider>
@@ -23,13 +26,19 @@
           </div>
         </a-layout-content>
         <a-layout-sider width="300px" class="sider">
-          属性面板
-          <propsTable
-            v-if="activeComponent"
-            :componentProps="activeComponent.props"
-            @change="handleChangeProps"
-          />
-          <div>{{ activeComponent }}</div>
+          <a-tabs v-model:activeKey="activeKey" :animated="false">
+            <a-tab-pane key="1" tab="属性面板">
+              <propsTable
+                v-if="activeComponent"
+                :componentProps="activeComponent.props"
+                @change="handleChangeProps"
+              />
+              <div>{{ activeComponent }}</div>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="图层设置">
+              <LayerList :list="list" />
+            </a-tab-pane>
+          </a-tabs>
         </a-layout-sider>
       </a-layout>
     </a-layout>
@@ -37,10 +46,11 @@
 </template>
 
 <script>
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import LText from "@/components/LText.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
+import LayerList from "@/components/LayerList.vue";
 
 import ComponentList from "@/components/ComponentList.vue";
 import templates from "@/defaultTemplates";
@@ -56,12 +66,14 @@ export default defineComponent({
     ComponentList,
     EditWrapper,
     propsTable,
+    LayerList,
   },
   setup() {
     const store = useStore();
 
     const list = computed(() => store.state.editor.components);
     const activeComponent = computed(() => store.getters.getActiveComponent);
+    const activeKey = ref("1");
 
     const selectComponent = (item) => {
       console.log("---------", item);
@@ -91,6 +103,7 @@ export default defineComponent({
       activeComponentId,
       activeComponent,
       handleChangeProps,
+      activeKey,
     };
   },
 });
@@ -104,9 +117,19 @@ export default defineComponent({
 .header {
   height: 64px;
   line-height: 64px;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 500;
   background-color: #fff;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+.ant-layout-header {
+  padding: 20px;
+}
+.header img {
+  width: 32px;
+  margin-right: 10px;
 }
 .edit {
   height: 100vh;
@@ -116,6 +139,7 @@ export default defineComponent({
   height: 100%;
   background-color: #fff;
   padding: 20px;
+  /* border-top: 1px solid #ccc; */
 }
 .center-content {
   height: 100%;
@@ -124,7 +148,7 @@ export default defineComponent({
   align-items: center;
 }
 .center-box {
-  height: 50%;
+  height: 80%;
   width: 80%;
   background-color: #fff;
   position: relative;
