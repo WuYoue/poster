@@ -18,6 +18,7 @@
               <EditWrapper
                 :id="item.id"
                 :active="activeComponentId === item.id"
+                v-show="!item?.isHidden"
                 @set-active="setActive"
               >
                 <component :is="item.name" v-bind="item.props"></component>
@@ -29,14 +30,28 @@
           <a-tabs v-model:activeKey="activeKey" :animated="false">
             <a-tab-pane key="1" tab="属性面板">
               <propsTable
-                v-if="activeComponent"
+                v-if="activeComponent && !activeComponent.isLocked"
                 :componentProps="activeComponent.props"
                 @change="handleChangeProps"
               />
+              <a-empty
+                v-else
+                :description="
+                  activeComponent?.isLocked
+                    ? '该元素被锁定，无法编辑'
+                    : '暂无属性'
+                "
+              ></a-empty>
               <div>{{ activeComponent }}</div>
             </a-tab-pane>
             <a-tab-pane key="2" tab="图层设置">
-              <LayerList :list="list" />
+              <LayerList
+                :list="list"
+                :activeComponentId="activeComponentId ?? ''"
+                @changeActive="setActive"
+                @changeLock="changeLock"
+                @changeHidden="changeHidden"
+              />
             </a-tab-pane>
           </a-tabs>
         </a-layout-sider>
@@ -95,6 +110,22 @@ export default defineComponent({
       }
       // store.commit.editor.setComponentProps(key, value);
     };
+    const changeLock = (id) => {
+      console.log(id);
+      list.value.forEach((item) => {
+        if (item.id === id) {
+          item.isLocked = !item.isLocked;
+        }
+      });
+    };
+    const changeHidden = (id) => {
+      console.log(id);
+      list.value.forEach((item) => {
+        if (item.id === id) {
+          item.isHidden = !item.isHidden;
+        }
+      });
+    };
     return {
       list,
       templates,
@@ -104,6 +135,8 @@ export default defineComponent({
       activeComponent,
       handleChangeProps,
       activeKey,
+      changeLock,
+      changeHidden,
     };
   },
 });
@@ -152,5 +185,8 @@ export default defineComponent({
   width: 80%;
   background-color: #fff;
   position: relative;
+}
+.ant-empty {
+  margin-top: 200px;
 }
 </style>
