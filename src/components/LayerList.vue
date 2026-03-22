@@ -1,5 +1,5 @@
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, reactive } from "vue";
 
 export default defineComponent({
   name: "LayerList",
@@ -15,6 +15,10 @@ export default defineComponent({
   },
   emits: ["changeActive", "changeLock", "changeHidden"],
   setup(props, { emit }) {
+    const dragData = reactive({
+      id: null,
+    });
+
     const changeActive = (id) => {
       emit("changeActive", id);
     };
@@ -31,10 +35,15 @@ export default defineComponent({
       // if (data) {
       //   emit("changeActive", data);
       // }
+      dragData.id = null;
     };
     // TODO为什么要添加这个方法，才能实现拖拽功能
     const onDragOver = (e) => {
       e.preventDefault();
+    };
+    const onDragStart = (e, id) => {
+      // e.dataTransfer.setData("text/plain", e.target.id);
+      dragData.id = id;
     };
     return {
       changeActive,
@@ -42,6 +51,8 @@ export default defineComponent({
       changeHidden,
       onDrop,
       onDragOver,
+      onDragStart,
+      dragData,
     };
   },
 });
@@ -50,7 +61,10 @@ export default defineComponent({
 <template>
   <div>
     <div
-      :class="{ active: item.id === activeComponentId }"
+      :class="{
+        active: item.id === activeComponentId,
+        dragging: dragData.id === item.id,
+      }"
       v-for="item in list"
       :key="item.id"
       class="layer-item"
@@ -58,6 +72,7 @@ export default defineComponent({
       draggable="true"
       @drop="onDrop"
       @dragover="onDragOver"
+      @dragstart="onDragStart($event, item.id)"
     >
       {{ item.layerName ?? "未命名图层" }}
       <div class="layer-icon">
@@ -106,6 +121,9 @@ export default defineComponent({
 .active {
   border: 1px solid #1890ff;
   background-color: #e5f4ff;
+}
+.dragging {
+  opacity: 0.38;
 }
 .layer-icon {
   display: flex;
