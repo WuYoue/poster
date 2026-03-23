@@ -10,6 +10,17 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const obj = {
+      _name: "未命名图层",
+      get name() {
+        return this._name;
+      },
+    };
+    const proxy = new Proxy(obj, {
+      get(target, key) {
+        return target._name;
+      },
+    });
     return {};
   },
 });
