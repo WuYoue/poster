@@ -102,7 +102,7 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.edit-wrapper :deep(:not(.resizer)) {
+.edit-wrapper > :not(.resizers) {
   pointer-events: none !important;
 }
 .edit-wrapper {
@@ -145,7 +145,7 @@ export default defineComponent({
 .edit-wrapper .resizers .resizer.top-left {
   left: -5px;
   top: -5px;
-  cursor: nwse-resize !important;
+  cursor: nwse-resize;
 }
 .edit-wrapper .resizers .resizer.top-right {
   right: -5px;
