@@ -10,6 +10,8 @@ const defaultTextTemplates = [
     text: "正文内容",
     tag: "p",
     width: "100px",
+    top: "",
+    left: "",
   },
   {
     text: "链接内容",
@@ -17,6 +19,8 @@ const defaultTextTemplates = [
     textDecoration: "underline",
     tag: "p",
     width: "100px",
+    top: "",
+    left: "",
   },
   {
     text: "按钮内容",
@@ -34,6 +38,8 @@ const defaultTextTemplates = [
     tag: "button",
     textAlign: "center",
     position: "absolute",
+    top: "0px",
+    left: "0px",
   },
 ];
 

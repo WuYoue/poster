@@ -18,6 +18,7 @@ const editor = {
           text: "hello world",
           fontSize: "24px",
           top: "20px", // 👈 往下挪一点
+          left: "20px",
           lineHeight: "1.5",
           textAlign: "center",
           fontFamily: "",
@@ -45,25 +46,26 @@ const editor = {
           fontSize: "14px",
           color: "red",
           top: "60px", // 👈 再往下挪一点
+          left: "20px",
           textAlign: "center",
           fontFamily: "",
         },
       },
-      {
-        id: "3",
-        name: "LText",
-        layerName: "图层3",
-        isHidden: false,
-        isLocked: false,
-        props: {
-          text: "中国风",
-          fontSize: "18px",
-          color: "blue",
-          top: "100px", // 👈 挪到最下面
-          actionType: "url",
-          url: "https://www.baidu.com",
-        },
-      },
+      // {
+      //   id: "3",
+      //   name: "LText",
+      //   layerName: "图层3",
+      //   isHidden: false,
+      //   isLocked: false,
+      //   props: {
+      //     text: "中国风",
+      //     fontSize: "18px",
+      //     color: "blue",
+      //     top: "100px", // 👈 挪到最下面
+      //     actionType: "url",
+      //     url: "https://www.baidu.com",
+      //   },
+      // },
     ],
   }),
   getters: {
