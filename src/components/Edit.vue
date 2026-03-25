@@ -1,5 +1,5 @@
 <script>
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, reactive } from "vue";
 import { useStore } from "vuex";
 import LText from "@/components/LText.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
@@ -64,6 +64,18 @@ export default defineComponent({
         }
       });
     };
+
+    // let lll = reactive([
+    //   { name: "吃饭", value: false },
+    //   { name: "睡觉", value: false },
+    //   { name: "学习", value: false },
+    // ]);
+    // const deleteItem = () => {
+    //   //删除第一项
+    //   lll.shift();
+    //   //删除最后一项
+    //   // lll.pop();
+    // };
     return {
       list,
       templates,
@@ -75,6 +87,8 @@ export default defineComponent({
       activeKey,
       changeLock,
       changeHidden,
+      // lll,
+      // deleteItem,
     };
   },
 });
@@ -82,6 +96,11 @@ export default defineComponent({
 
 <template>
   <div class="edit">
+    <!-- <a-button @click="deleteItem">删除项</a-button>
+    <div v-for="(item, index) in lll" :key="index">
+      {{ item.name }}
+      <a-checkbox v-model="item.value" />
+    </div> -->
     <a-layout class="layout">
       <a-layout-header class="header">
         <img src="@/assets/WyLogo.svg" alt="无忧" />

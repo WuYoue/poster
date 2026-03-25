@@ -24,6 +24,7 @@ export default defineComponent({
       x: 0,
       y: 0,
     };
+    //TODO每个组件都可以获取一个wrapper元素，不用去获取当前激活的组件
     const wrapper = ref(null);
     const handleMouseDown = (e) => {
       console.log(wrapper.value);
@@ -71,12 +72,126 @@ export default defineComponent({
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     };
+    const setRightBottomMouseDown = (e) => {
+      //TODO添加右侧空气墙限制
+      e.stopPropagation();
+      console.log(e);
+      const start = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      const wrapperWidth = wrapper.value.offsetWidth;
+      const wrapperHeight = wrapper.value.offsetHeight;
 
+      const setRightBottomMouseMove = (e) => {
+        e.stopPropagation();
+        const move = {
+          x: e.clientX - start.x,
+          y: e.clientY - start.y,
+        };
+
+        let newWidth = Math.max(0, move.x + wrapperWidth);
+        let newHeight = Math.max(0, move.y + wrapperHeight);
+
+        props.props.width = `${newWidth}px`;
+        props.props.height = `${newHeight}px`;
+        console.log(move);
+      };
+      const setRightBottomMouseUp = () => {
+        document.removeEventListener("mousemove", setRightBottomMouseMove);
+        document.removeEventListener("mouseup", setRightBottomMouseUp);
+      };
+      document.addEventListener("mousemove", setRightBottomMouseMove);
+      document.addEventListener("mouseup", setRightBottomMouseUp);
+    };
+
+    const setLeftBottomMouseDown = (e) => {
+      e.stopPropagation();
+      const start = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      const wrapperWidth = wrapper.value.offsetWidth;
+      const wrapperHeight = wrapper.value.offsetHeight;
+      const wrapperLeft = parseFloat(props.props.left) || 0;
+
+      const setLeftBottomMouseMove = (e) => {
+        e.stopPropagation();
+        const move = {
+          x: e.clientX - start.x,
+          y: e.clientY - start.y,
+        };
+
+        const newWidth = Math.max(0, wrapperWidth - move.x);
+        const newHeight = Math.max(0, wrapperHeight + move.y);
+        const newLeft = wrapperLeft + Math.min(wrapperWidth, move.x);
+        props.props.width = `${newWidth}px`;
+        props.props.height = `${newHeight}px`;
+        props.props.left = `${newLeft}px`;
+      };
+
+      const setLeftBottomMouseUp = () => {
+        document.removeEventListener("mousemove", setLeftBottomMouseMove);
+        document.removeEventListener("mouseup", setLeftBottomMouseUp);
+      };
+      document.addEventListener("mousemove", setLeftBottomMouseMove);
+      document.addEventListener("mouseup", setLeftBottomMouseUp);
+    };
+    const setLeftTopMouseDown = (e) => {
+      e.stopPropagation();
+      const start = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      const wrapperWidth = wrapper.value.offsetWidth;
+      const wrapperHeight = wrapper.value.offsetHeight;
+      const wrapperLeft = parseFloat(props.props.left) || 0;
+      const wrapperTop = parseFloat(props.props.top) || 0;
+
+      const setLeftTopMouseMove = (e) => {
+        e.stopPropagation();
+        const move = {
+          x: e.clientX - start.x,
+          y: e.clientY - start.y,
+        };
+        console.log(move);
+        const newWidth = Math.max(
+          0,
+          Math.min(wrapperWidth - move.x, wrapperWidth + wrapperLeft),
+        );
+        const newHeight = Math.max(
+          0,
+          Math.min(wrapperHeight - move.y, wrapperHeight + wrapperTop),
+        );
+        const newLeft = Math.max(
+          0,
+          wrapperLeft + Math.min(wrapperWidth, move.x),
+        );
+        const newTop = Math.max(
+          0,
+          wrapperTop + Math.min(wrapperHeight, move.y),
+        );
+        props.props.width = `${newWidth}px`;
+        props.props.height = `${newHeight}px`;
+        props.props.left = `${newLeft}px`;
+        props.props.top = `${newTop}px`;
+      };
+
+      const setLeftTopMouseUp = () => {
+        document.removeEventListener("mousemove", setLeftTopMouseMove);
+        document.removeEventListener("mouseup", setLeftTopMouseUp);
+      };
+      document.addEventListener("mousemove", setLeftTopMouseMove);
+      document.addEventListener("mouseup", setLeftTopMouseUp);
+    };
     return {
       handleClick,
       style,
       handleMouseDown,
       wrapper,
+      setRightBottomMouseDown,
+      setLeftBottomMouseDown,
+      setLeftTopMouseDown,
     };
   },
 });
@@ -93,10 +208,16 @@ export default defineComponent({
   >
     <slot></slot>
     <div class="resizers">
-      <div class="resizer top-left"></div>
+      <div class="resizer top-left" @mousedown="setLeftTopMouseDown"></div>
       <div class="resizer top-right"></div>
-      <div class="resizer bottom-left"></div>
-      <div class="resizer bottom-right"></div>
+      <div
+        class="resizer bottom-left"
+        @mousedown="setLeftBottomMouseDown"
+      ></div>
+      <div
+        class="resizer bottom-right"
+        @mousedown="setRightBottomMouseDown"
+      ></div>
     </div>
   </div>
 </template>
