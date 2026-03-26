@@ -35,7 +35,7 @@ export default defineComponent({
       return reduce(
         props.componentProps,
         (acc, value, key) => {
-          console.log(acc, value, key);
+          // console.log(acc, value, key);
           const item = propsMap[key];
           if (item) {
             const {

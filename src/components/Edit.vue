@@ -1,6 +1,7 @@
 <script>
 import { computed, defineComponent, ref, reactive } from "vue";
 import { useStore } from "vuex";
+import { debounce } from "lodash-es";
 import LText from "@/components/LText.vue";
 import EditWrapper from "@/components/EditWrapper.vue";
 import LayerList from "@/components/LayerList.vue";
@@ -27,11 +28,20 @@ export default defineComponent({
     const list = computed(() => store.state.editor.components);
     const activeComponent = computed(() => store.getters.getActiveComponent);
     const activeKey = ref("1");
+    const history = reactive([]);
+    let historyIndex = -1;
 
     const selectComponent = (item) => {
       console.log("---------", item);
       console.log(store.state.editor.components);
-
+      const historyItem = {
+        id: item.id,
+        data: item,
+        type: "add",
+      };
+      history.push(historyItem);
+      historyIndex++;
+      console.log(history);
       store.state.editor.components.push(item);
     };
     const setActive = (id) => {
@@ -41,10 +51,46 @@ export default defineComponent({
     const activeComponentId = computed(
       () => store.state.editor.activeComponentId,
     );
+    //关闭开始防抖
+    let oldValue = null;
+    const handleChangePropsDebounce = debounce((e) => {
+      let historyItem = null;
+      if (e.key === "position") {
+        historyItem = {
+          ...e,
+        };
+        oldValue = historyItem.data.newValue;
+      } else {
+        historyItem = {
+          id: activeComponent.value.id,
+          type: "change",
+          data: {
+            oldValue: {
+              [e.key]: oldValue.value,
+            },
+            newValue: {
+              [e.key]: e.value,
+            },
+          },
+        };
+      }
+      history.push(historyItem);
+      historyIndex++;
+      oldValue = e.value;
+      console.log("changeProps--------------------------------", history);
+    }, 600);
     const handleChangeProps = (e) => {
-      console.log(e);
+      console.log("handleChangeProps", e);
       if (activeComponent.value) {
+        if (oldValue === null || oldValue.key !== e.key) {
+          oldValue = {
+            key: e.key,
+            value: activeComponent.value.props[e.key],
+          };
+        }
         activeComponent.value.props[e.key] = e.value;
+        //防抖处理
+        handleChangePropsDebounce(e);
       }
       // store.commit.editor.setComponentProps(key, value);
     };
@@ -64,7 +110,74 @@ export default defineComponent({
         }
       });
     };
-
+    const deleteListItem = () => {
+      //取最后一项
+      // 有没有方法可以直接取数组最后一项的值，pop不是删除吗？
+      // const item = store.state.editor.components[store.state.editor.components.length - 1];
+      const lastItem = store.state.editor.components.pop();
+      const historyItem = {
+        id: lastItem.id,
+        type: "delete",
+        data: lastItem,
+      };
+      history.push(historyItem);
+      historyIndex++;
+      console.log(history);
+    };
+    const undo = () => {
+      if (historyIndex < 0) {
+        return;
+      }
+      const historyItem = history[historyIndex];
+      switch (historyItem.type) {
+        case "add":
+          store.state.editor.components.pop();
+          historyIndex--;
+          break;
+        case "delete":
+          store.state.editor.components.push(historyItem.data);
+          historyIndex--;
+          break;
+        case "change":
+          const item = store.state.editor.components.find(
+            (item) => item.id === historyItem.id,
+          );
+          const data = historyItem.data;
+          item.props = {
+            ...item.props,
+            ...data.oldValue,
+          };
+          historyIndex--;
+          break;
+      }
+    };
+    const redo = () => {
+      if (historyIndex === history.length - 1) {
+        return;
+      }
+      const historyItem = history[historyIndex + 1];
+      switch (historyItem.type) {
+        case "add":
+          store.state.editor.components.push(historyItem.data);
+          historyIndex++;
+          break;
+        case "delete":
+          store.state.editor.components.pop();
+          historyIndex++;
+          break;
+        case "change":
+          const item = store.state.editor.components.find(
+            (item) => item.id === historyItem.id,
+          );
+          const data = historyItem.data;
+          item.props = {
+            ...item.props,
+            ...data.newValue,
+          };
+          historyIndex++;
+          break;
+      }
+    };
     // let lll = reactive([
     //   { name: "吃饭", value: false },
     //   { name: "睡觉", value: false },
@@ -87,8 +200,13 @@ export default defineComponent({
       activeKey,
       changeLock,
       changeHidden,
+      deleteListItem,
+      undo,
+      redo,
       // lll,
       // deleteItem,
+      history,
+      historyIndex,
     };
   },
 });
@@ -96,6 +214,11 @@ export default defineComponent({
 
 <template>
   <div class="edit">
+    <a-button @click="undo"> 撤销 </a-button>
+    <a-button @click="redo"> 重做 </a-button>
+    <a-button @click="deleteListItem"> 删除 </a-button>
+    {{ historyIndex }}
+    {{ history }}
     <!-- <a-button @click="deleteItem">删除项</a-button>
     <div v-for="(item, index) in lll" :key="index">
       {{ item.name }}
@@ -122,6 +245,7 @@ export default defineComponent({
                 :props="item.props"
                 v-show="!item?.isHidden"
                 @set-active="setActive"
+                @change="handleChangeProps"
               >
                 <component :is="item.name" v-bind="item.props"></component>
               </EditWrapper>

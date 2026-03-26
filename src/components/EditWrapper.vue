@@ -10,7 +10,7 @@ export default defineComponent({
     props: Object,
   },
   //TODO为什么要接受一个id属性，而不是直接在for循环中使用item的id属性
-  emits: ["set-active"],
+  emits: ["set-active", "change"],
   setup(props, { emit }) {
     const style = computed(() =>
       pick(props.props, ["top", "left", "width", "height"]),
@@ -43,7 +43,8 @@ export default defineComponent({
       // 记录props中top与left
       let startLeft = parseFloat(props.props.left) || 0;
       let startTop = parseFloat(props.props.top) || 0;
-
+      let newTopLimit = 0;
+      let newLeftLimit = 0;
       const handleMouseMove = (e) => {
         const move = {
           x: e.clientX - start.x,
@@ -52,8 +53,8 @@ export default defineComponent({
         console.log(move);
         let newTop = move.y + startTop;
         let newLeft = move.x + startLeft;
-        const newTopLimit = Math.max(0, Math.min(newTop, maxTop));
-        const newLeftLimit = Math.max(0, Math.min(newLeft, maxLeft));
+        newTopLimit = Math.max(0, Math.min(newTop, maxTop));
+        newLeftLimit = Math.max(0, Math.min(newLeft, maxLeft));
         if (newLeft !== newLeftLimit) {
           startLeft = newLeftLimit;
           start.x = e.clientX;
@@ -68,6 +69,21 @@ export default defineComponent({
       const handleMouseUp = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
+        emit("change", {
+          id: props.id,
+          type: "change",
+          key: "position",
+          data: {
+            oldValue: {
+              top: startTop + "px",
+              left: startLeft + "px",
+            },
+            newValue: {
+              top: newTopLimit + "px",
+              left: newLeftLimit + "px",
+            },
+          },
+        });
       };
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
