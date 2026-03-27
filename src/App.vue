@@ -4,8 +4,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script>
+import { defineComponent, onMounted } from "vue";
 import Edit from "./components/Edit.vue";
 
 export default defineComponent({

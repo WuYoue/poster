@@ -5,7 +5,7 @@ export const commonDefaultProps = {
   url: "",
   // size
   height: "",
-  width: "373px",
+  width: "80px",
   paddingLeft: "0px",
   paddingRight: "0px",
   paddingTop: "0px",

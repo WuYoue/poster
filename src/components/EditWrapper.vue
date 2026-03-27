@@ -98,6 +98,8 @@ export default defineComponent({
       };
       const wrapperWidth = wrapper.value.offsetWidth;
       const wrapperHeight = wrapper.value.offsetHeight;
+      let newWidth = wrapperWidth;
+      let newHeight = wrapperHeight;
 
       const setRightBottomMouseMove = (e) => {
         e.stopPropagation();
@@ -106,14 +108,29 @@ export default defineComponent({
           y: e.clientY - start.y,
         };
 
-        let newWidth = Math.max(0, move.x + wrapperWidth);
-        let newHeight = Math.max(0, move.y + wrapperHeight);
+        newWidth = Math.max(0, move.x + wrapperWidth);
+        newHeight = Math.max(0, move.y + wrapperHeight);
 
         props.props.width = `${newWidth}px`;
         props.props.height = `${newHeight}px`;
         console.log(move);
       };
       const setRightBottomMouseUp = () => {
+        emit("change", {
+          id: props.id,
+          type: "change",
+          key: "position",
+          data: {
+            oldValue: {
+              width: wrapperWidth + "px",
+              height: wrapperHeight + "px",
+            },
+            newValue: {
+              width: newWidth + "px",
+              height: newHeight + "px",
+            },
+          },
+        });
         document.removeEventListener("mousemove", setRightBottomMouseMove);
         document.removeEventListener("mouseup", setRightBottomMouseUp);
       };
@@ -130,6 +147,9 @@ export default defineComponent({
       const wrapperWidth = wrapper.value.offsetWidth;
       const wrapperHeight = wrapper.value.offsetHeight;
       const wrapperLeft = parseFloat(props.props.left) || 0;
+      let newWidth = wrapperWidth;
+      let newHeight = wrapperHeight;
+      let newLeft = wrapperLeft;
 
       const setLeftBottomMouseMove = (e) => {
         e.stopPropagation();
@@ -138,15 +158,32 @@ export default defineComponent({
           y: e.clientY - start.y,
         };
 
-        const newWidth = Math.max(0, wrapperWidth - move.x);
-        const newHeight = Math.max(0, wrapperHeight + move.y);
-        const newLeft = wrapperLeft + Math.min(wrapperWidth, move.x);
+        newWidth = Math.max(0, wrapperWidth - move.x);
+        newHeight = Math.max(0, wrapperHeight + move.y);
+        newLeft = wrapperLeft + Math.min(wrapperWidth, move.x);
         props.props.width = `${newWidth}px`;
         props.props.height = `${newHeight}px`;
         props.props.left = `${newLeft}px`;
       };
 
       const setLeftBottomMouseUp = () => {
+        emit("change", {
+          id: props.id,
+          type: "change",
+          key: "position",
+          data: {
+            oldValue: {
+              width: wrapperWidth + "px",
+              height: wrapperHeight + "px",
+              left: wrapperLeft + "px",
+            },
+            newValue: {
+              width: newWidth + "px",
+              height: newHeight + "px",
+              left: newLeft + "px",
+            },
+          },
+        });
         document.removeEventListener("mousemove", setLeftBottomMouseMove);
         document.removeEventListener("mouseup", setLeftBottomMouseUp);
       };
@@ -163,6 +200,10 @@ export default defineComponent({
       const wrapperHeight = wrapper.value.offsetHeight;
       const wrapperLeft = parseFloat(props.props.left) || 0;
       const wrapperTop = parseFloat(props.props.top) || 0;
+      let newWidth = wrapperWidth;
+      let newHeight = wrapperHeight;
+      let newLeft = wrapperLeft;
+      let newTop = wrapperTop;
 
       const setLeftTopMouseMove = (e) => {
         e.stopPropagation();
@@ -171,22 +212,16 @@ export default defineComponent({
           y: e.clientY - start.y,
         };
         console.log(move);
-        const newWidth = Math.max(
+        newWidth = Math.max(
           0,
           Math.min(wrapperWidth - move.x, wrapperWidth + wrapperLeft),
         );
-        const newHeight = Math.max(
+        newHeight = Math.max(
           0,
           Math.min(wrapperHeight - move.y, wrapperHeight + wrapperTop),
         );
-        const newLeft = Math.max(
-          0,
-          wrapperLeft + Math.min(wrapperWidth, move.x),
-        );
-        const newTop = Math.max(
-          0,
-          wrapperTop + Math.min(wrapperHeight, move.y),
-        );
+        newLeft = Math.max(0, wrapperLeft + Math.min(wrapperWidth, move.x));
+        newTop = Math.max(0, wrapperTop + Math.min(wrapperHeight, move.y));
         props.props.width = `${newWidth}px`;
         props.props.height = `${newHeight}px`;
         props.props.left = `${newLeft}px`;
@@ -194,6 +229,25 @@ export default defineComponent({
       };
 
       const setLeftTopMouseUp = () => {
+        emit("change", {
+          id: props.id,
+          type: "change",
+          key: "position",
+          data: {
+            oldValue: {
+              width: wrapperWidth + "px",
+              height: wrapperHeight + "px",
+              left: wrapperLeft + "px",
+              top: wrapperTop + "px",
+            },
+            newValue: {
+              width: newWidth + "px",
+              height: newHeight + "px",
+              left: newLeft + "px",
+              top: newTop + "px",
+            },
+          },
+        });
         document.removeEventListener("mousemove", setLeftTopMouseMove);
         document.removeEventListener("mouseup", setLeftTopMouseUp);
       };
