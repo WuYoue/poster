@@ -13,7 +13,7 @@ export default defineComponent({
   emits: ["set-active", "change"],
   setup(props, { emit }) {
     const style = computed(() =>
-      pick(props.props, ["top", "left", "width", "height"]),
+      pick(props.props, ["top", "left", "width", "height", "bottom", "right"]),
     );
     const handleClick = () => {
       console.log("-------------");

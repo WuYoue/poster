@@ -20,7 +20,7 @@ import templates from "@/defaultTemplates";
 import propsTable from "@/components/propsTable.vue";
 
 import { generatePosterLayout, getStaticImageBase64 } from "@/utils/ai.js";
-import image from "@/assets/img/dd5ac42c-1ae4-4613-aba8-41f327e96ba2.png";
+import image from "@/assets/img/模版2.png";
 
 export default defineComponent({
   name: "Edit",
@@ -312,7 +312,7 @@ export default defineComponent({
     //   }
     // };
     onMounted(() => {
-      initAIPoster();
+      // initAIPoster();
     });
     // let lll = reactive([
     //   { name: "吃饭", value: false },
@@ -352,9 +352,6 @@ export default defineComponent({
 
 <template>
   <div class="edit">
-    <a-button @click="undo"> 撤销 </a-button>
-    <a-button @click="redo"> 重做 </a-button>
-    <a-button @click="deleteListItem"> 删除 </a-button>
     <!-- {{ historyIndex }}
     {{ history }} -->
     <!-- <a-button @click="deleteItem">删除项</a-button>
@@ -368,11 +365,28 @@ export default defineComponent({
     <a-layout class="layout">
       <a-layout-header class="header">
         <img src="@/assets/WyLogo.svg" alt="无忧" />
-        海报生成编辑器
+        <div class="title">星图</div>
+        <img
+          class="icon"
+          src="@/assets/icon/Container.svg"
+          alt="撤销"
+          @click="undo"
+        />
+        <img
+          class="icon"
+          src="@/assets/icon/Container-1.svg"
+          alt="重做"
+          @click="redo"
+        />
+        <img
+          class="icon"
+          src="@/assets/icon/Container-2.svg"
+          alt="删除"
+          @click="deleteListItem"
+        />
       </a-layout-header>
       <a-layout class="content">
-        <a-layout-sider width="260px" class="sider">
-          <p>组件列表</p>
+        <a-layout-sider width="280px" class="sider">
           <ComponentList :list="templates" @selectComponent="selectComponent" />
         </a-layout-sider>
         <a-layout-content class="center-content">
@@ -457,6 +471,9 @@ export default defineComponent({
 .ai-logger::-webkit-scrollbar {
   display: none;
 }
+.ai-logger::-webkit-scrollbar:horizontal {
+  height: 0px; /* 把横向滑动条的高度设为 0，直接隐身！ */
+}
 .header {
   height: 64px;
   line-height: 64px;
@@ -470,6 +487,7 @@ export default defineComponent({
 .ant-layout-header {
   padding: 20px;
 }
+
 .header img {
   width: 32px;
   margin-right: 10px;
@@ -480,27 +498,41 @@ export default defineComponent({
 .sider {
   width: 300px;
   height: 100%;
-  background-color: #fff;
+  background-color: #f7f9ff;
   padding: 20px;
   /* border-top: 1px solid #ccc; */
+}
+.sider:nth-child(3) {
+  border-left: 2px solid #e2e8f080;
 }
 .center-content {
   height: 100%;
   display: flex;
   justify-content: center;
+  background-color: #eff6ff;
   align-items: center;
 }
 .center-box {
   width: 375px;
-  height: 667px;
+  height: 800px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 加个阴影，立体感拉满 */
   background-color: #fff;
   position: relative;
-  background-image: url("../assets/img/dd5ac42c-1ae4-4613-aba8-41f327e96ba2.png");
+  background-image: url("../assets/img/模版2.png");
   background-size: cover;
   background-position: center;
 }
 .ant-empty {
   margin-top: 200px;
+}
+.title {
+  margin-right: 160px;
+
+  font-size: 24px;
+}
+
+.header .icon {
+  width: 16px;
+  margin-right: 10px;
 }
 </style>

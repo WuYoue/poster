@@ -9,24 +9,24 @@ const client = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-// 预设模板库：我们在这里设立不可侵犯的安全边距（30px）
+// 预设模板库：设立不可侵犯的安全边距（26px），并适配 800px 高度
 const PRESET_TEMPLATES = `
-【模板A：右侧留白排版（文字靠右对齐）】
+【模板A：右侧留白排版（文字靠右对齐，强制右边距26px）】
 [
-  { "id": "t1", "name": "l-text", "props": { "text": "早安", "fontSize": "72px", "color": "#1a1a1a", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "right": "30px", "top": "90px", "textAlign": "right", "letterSpacing": "8px", "width": "auto" } },
-  { "id": "t2", "name": "l-text", "props": { "text": "【占位：大标】", "fontSize": "20px", "color": "#333333", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "right": "30px", "top": "200px", "textAlign": "right", "lineHeight": "1.5", "width": "188px" } },
-  { "id": "t3", "name": "l-text", "props": { "text": "【占位：农历与节日】", "fontSize": "14px", "color": "#ffffff", "backgroundColor": "#8b2c20", "borderRadius": "2px", "paddingLeft": "10px", "paddingRight": "10px", "paddingTop": "4px", "paddingBottom": "4px", "right": "30px", "top": "440px", "textAlign": "center", "width": "auto" } },
-  { "id": "t4", "name": "l-text", "props": { "text": "【占位：商家文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "right": "30px", "top": "480px", "textAlign": "right", "lineHeight": "1.8", "width": "280px" } },
-  { "id": "t5", "name": "l-text", "props": { "text": "【占位：用户文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "right": "30px", "top": "560px", "textAlign": "right", "lineHeight": "1.8", "width": "280px" } }
+  { "id": "t1", "name": "l-text", "props": { "text": "早安", "fontSize": "72px", "color": "#1a1a1a", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "right": "26px", "top": "100px", "textAlign": "right", "letterSpacing": "8px", "width": "auto" } },
+  { "id": "t2", "name": "l-text", "props": { "text": "【占位：大标】", "fontSize": "20px", "color": "#333333", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "right": "26px", "top": "220px", "textAlign": "right", "lineHeight": "1.5", "width": "188px" } },
+  { "id": "t3", "name": "l-text", "props": { "text": "【占位：农历与节日】", "fontSize": "14px", "color": "#ffffff", "backgroundColor": "#8b2c20", "borderRadius": "2px", "paddingLeft": "10px", "paddingRight": "10px", "paddingTop": "4px", "paddingBottom": "4px", "right": "26px", "top": "560px", "textAlign": "center", "width": "auto" } },
+  { "id": "t4", "name": "l-text", "props": { "text": "【占位：商家文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "right": "26px", "top": "610px", "textAlign": "right", "lineHeight": "1.8", "width": "280px" } },
+  { "id": "t5", "name": "l-text", "props": { "text": "【占位：用户文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "right": "26px", "top": "690px", "textAlign": "right", "lineHeight": "1.8", "width": "280px" } }
 ]
 
-【模板B：左侧留白排版（文字靠左对齐，强制左边距30px）】
+【模板B：左侧留白排版（文字靠左对齐，强制左边距26px）】
 [
-  { "id": "t1", "name": "l-text", "props": { "text": "早安", "fontSize": "72px", "color": "#1a1a1a", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "left": "30px", "top": "90px", "textAlign": "left", "letterSpacing": "8px", "width": "auto" } },
-  { "id": "t2", "name": "l-text", "props": { "text": "【占位：大标】", "fontSize": "20px", "color": "#333333", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "left": "30px", "top": "200px", "textAlign": "left", "lineHeight": "1.5", "width": "188px" } },
-  { "id": "t3", "name": "l-text", "props": { "text": "【占位：农历与节日】", "fontSize": "14px", "color": "#ffffff", "backgroundColor": "#8b2c20", "borderRadius": "2px", "paddingLeft": "10px", "paddingRight": "10px", "paddingTop": "4px", "paddingBottom": "4px", "left": "30px", "top": "440px", "textAlign": "center", "width": "auto" } },
-  { "id": "t4", "name": "l-text", "props": { "text": "【占位：商家文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "left": "30px", "top": "480px", "textAlign": "left", "lineHeight": "1.8", "width": "280px" } },
-  { "id": "t5", "name": "l-text", "props": { "text": "【占位：用户文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "left": "30px", "top": "560px", "textAlign": "left", "lineHeight": "1.8", "width": "280px" } }
+  { "id": "t1", "name": "l-text", "props": { "text": "早安", "fontSize": "72px", "color": "#1a1a1a", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "left": "26px", "top": "100px", "textAlign": "left", "letterSpacing": "8px", "width": "auto" } },
+  { "id": "t2", "name": "l-text", "props": { "text": "【占位：大标】", "fontSize": "20px", "color": "#333333", "fontFamily": "'SimSun', 'STSong', serif", "fontWeight": "bold", "left": "26px", "top": "220px", "textAlign": "left", "lineHeight": "1.5", "width": "188px" } },
+  { "id": "t3", "name": "l-text", "props": { "text": "【占位：农历与节日】", "fontSize": "14px", "color": "#ffffff", "backgroundColor": "#8b2c20", "borderRadius": "2px", "paddingLeft": "10px", "paddingRight": "10px", "paddingTop": "4px", "paddingBottom": "4px", "left": "26px", "top": "560px", "textAlign": "center", "width": "auto" } },
+  { "id": "t4", "name": "l-text", "props": { "text": "【占位：商家文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "left": "26px", "top": "610px", "textAlign": "left", "lineHeight": "1.8", "width": "280px" } },
+  { "id": "t5", "name": "l-text", "props": { "text": "【占位：用户文案】", "fontSize": "12px", "color": "#4a4a4a", "fontFamily": "'PingFang SC', '-apple-system', sans-serif", "left": "26px", "top": "690px", "textAlign": "left", "lineHeight": "1.8", "width": "280px" } }
 ]
 `;
 
@@ -52,10 +52,11 @@ export async function generatePosterLayout(
           role: "system",
           content: `你是一个拿着顶薪的海报排版总监，同时精通中国传统历法。你的任务是分析图片构图，并在我提供的预设模板中选择最匹配的进行文案填空。
 
-      【极度重要：安全边距锁定】
-      由于之前的排版文字贴靠左边过于拥挤，你现在必须设立一个“不可侵犯的安全边距”！
-      所有使用 left 属性的组件，其 left 值必须强制在 "30px" 到 "40px" 之间！绝不能设置低于 30px 的值！
-      同理，所有使用 right 属性的组件，其 right 值也必须在 "30px" 到 "40px" 之间！
+      【极度重要：安全边距与画布高度锁定】
+      当前海报的画布高度已调整为 800px！请注意下方文字（商家文案、用户文案）的垂直分布。
+      你现在必须设立一个“不可侵犯的安全边距”：
+      所有使用 left 属性的组件，其 left 值必须强制设置为 "26px"！绝不能贴着边缘！
+      同理，所有使用 right 属性的组件，其 right 值也必须强制设置为 "26px"！
 
       【核心工作流】
       1. 观察背景图片留白区域，从以下预设模板中挑选【唯一一个】最匹配的模板：

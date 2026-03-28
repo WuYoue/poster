@@ -21,6 +21,8 @@ export const commonDefaultProps = {
   // position and x,y
   position: "absolute",
   left: "0",
+  bottom: "0",
+  margin: "0",
   top: "0",
   right: "0",
 };

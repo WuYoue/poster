@@ -1,6 +1,6 @@
 const defaultTextTemplates = [
   {
-    text: "大标题",
+    text: "添加大标题",
     fontSize: "30px",
     fontWeight: "bold",
     tag: "h2",
